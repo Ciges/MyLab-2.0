@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.hostname = "ansible.ciges.net"
 
-  config.ssh.username = "ciges"
+#  config.ssh.username = "ciges"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -51,7 +51,8 @@ Vagrant.configure("2") do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
+  config.vm.synced_folder "app/", "/home/ciges/app",
+    create: true, owner: "ciges", group: "ciges"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
