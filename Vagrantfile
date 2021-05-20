@@ -13,10 +13,10 @@ Vagrant.configure("2") do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "generic/debian10"
+  config.vm.provider "virtualbox"
 
-  # Name of the VM in Vagrant
+  # VM: ansible
   config.vm.define "ansible" do |ansible|
-    ansible.vm.provider "virtualbox"
     ansible.vm.hostname = "ansible.ciges.net"
 
     # Disable automatic box update checking. If you disable this, then
@@ -71,6 +71,30 @@ Vagrant.configure("2") do |config|
     # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
     # documentation for more information about their specific syntax and use.
     ansible.vm.provision "shell", inline: <<-SHELL
+      ## add ciges user
+      groupadd wheel
+      useradd -m ciges -s /bin/bash -G sudo,wheel
+      cp -a /home/vagrant/.ssh /home/ciges/
+      chown -R ciges:ciges /home/ciges
+      echo "ciges ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/ciges
+
+      ## Update and add packages
+      apt-get update
+      #   apt-get install -y apache2
+    SHELL
+  end
+
+  # VM: test1
+  config.vm.define "test1" do |test1|
+    test1.vm.hostname = "test1.ciges.net"
+    test1.vm.network "private_network", ip: "192.168.56.11"
+    test1.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.name = "test1"
+      vb.memory = "1024"
+    end
+
+    test1.vm.provision "shell", inline: <<-SHELL
       ## add ciges user
       groupadd wheel
       useradd -m ciges -s /bin/bash -G sudo,wheel
