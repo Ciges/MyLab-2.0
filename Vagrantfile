@@ -44,12 +44,6 @@ Vagrant.configure("2") do |config|
     # your network.
     # config.vm.network "public_network"
 
-    # Share an additional folder to the guest VM. The first argument is
-    # the path on the host to the actual folder. The second argument is
-    # the path on the guest to mount the folder. And the optional third
-    # argument is a set of non-required options.
-    ansible.vm.synced_folder "app/", "/home/ciges/app",
-      create: true, owner: "ciges", group: "ciges"
 
     # Provider-specific configuration so you can fine-tune various
     # backing providers for Vagrant. These expose provider-specific options.
@@ -70,18 +64,10 @@ Vagrant.configure("2") do |config|
     # Enable provisioning with a shell script. Additional provisioners such as
     # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
     # documentation for more information about their specific syntax and use.
-    ansible.vm.provision "shell", inline: <<-SHELL
-      ## add ciges user
-      groupadd wheel
-      useradd -m ciges -s /bin/bash -G sudo,wheel
-      cp -a /home/vagrant/.ssh /home/ciges/
-      chown -R ciges:ciges /home/ciges
-      echo "ciges ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/ciges
+    ansible.vm.provision "shell", path: "scripts/server_init.sh"
 
-      ## Update and add packages
-      apt-get update
-      #   apt-get install -y apache2
-    SHELL
+    ansible.vm.synced_folder "app/", "/home/ciges/app",
+      create: true, owner: "ciges", group: "ciges"
   end
 
   # VM: test1
@@ -94,18 +80,7 @@ Vagrant.configure("2") do |config|
       vb.memory = "1024"
     end
 
-    test1.vm.provision "shell", inline: <<-SHELL
-      ## add ciges user
-      groupadd wheel
-      useradd -m ciges -s /bin/bash -G sudo,wheel
-      cp -a /home/vagrant/.ssh /home/ciges/
-      chown -R ciges:ciges /home/ciges
-      echo "ciges ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/ciges
-
-      ## Update and add packages
-      apt-get update
-      #   apt-get install -y apache2
-    SHELL
+    test1.vm.provision "shell", path: "scripts/server_init.sh"
   end
 
 end
