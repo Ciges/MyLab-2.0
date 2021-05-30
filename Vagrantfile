@@ -65,9 +65,12 @@ Vagrant.configure("2") do |config|
     # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
     # documentation for more information about their specific syntax and use.
     ansible.vm.provision "shell", path: "scripts/server_init.sh"
+    # Configuration files
+    ansible.vm.provision "file", source: "etc", destination: "/tmp/etc"
+    ansible.vm.provision "shell", path: "scripts/server_init_config.sh"
 
-    ansible.vm.synced_folder "app/", "/home/ciges/app",
-      create: true, owner: "ciges", group: "ciges"
+    #ansible.vm.synced_folder "app/", "/home/ciges/app",
+    #  create: true, owner: "ciges", group: "ciges"
   end
 
   # VM: test1
@@ -81,6 +84,9 @@ Vagrant.configure("2") do |config|
     end
 
     test1.vm.provision "shell", path: "scripts/server_init.sh"
+    # Configuration files
+    test1.vm.provision "file", source: "etc", destination: "/tmp/etc"
+    test1.vm.provision "shell", path: "scripts/server_init_config.sh"
   end
 
 end
