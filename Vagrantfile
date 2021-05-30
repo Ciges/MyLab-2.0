@@ -68,6 +68,9 @@ Vagrant.configure("2") do |config|
     # Configuration files
     ansible.vm.provision "file", source: "etc", destination: "/tmp/etc"
     ansible.vm.provision "shell", path: "scripts/server_init_config.sh"
+    # Add SSH keys to give access to ciges and root users from host
+    ansible.vm.provision "file", source: "ssh_keys", destination: "/tmp/ssh_keys"
+    ansible.vm.provision "shell", path: "scripts/server_ssh_keys.sh"
 
     #ansible.vm.synced_folder "app/", "/home/ciges/app",
     #  create: true, owner: "ciges", group: "ciges"
@@ -87,6 +90,9 @@ Vagrant.configure("2") do |config|
     # Configuration files
     test1.vm.provision "file", source: "etc", destination: "/tmp/etc"
     test1.vm.provision "shell", path: "scripts/server_init_config.sh"
+    # Add SSH keys to give access to ciges and root users from host
+    test1.vm.provision "file", source: "ssh_keys", destination: "/tmp/ssh_keys"
+    test1.vm.provision "shell", path: "scripts/server_ssh_keys.sh"
   end
 
 end
