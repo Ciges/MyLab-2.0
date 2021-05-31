@@ -18,6 +18,9 @@ Vagrant.configure("2") do |config|
 
     config.vm.box = "generic/debian10"
     config.vm.provider "virtualbox"
+    if Vagrant.has_plugin?("vagrant-vbguest")
+      config.vbguest.auto_update = false
+    end
 
     config.vm.define hostname do |cfg|
       cfg.vm.hostname = hostname
