@@ -11,7 +11,7 @@ for u in ${users}; do
         for kf in /tmp/ssh_keys/*; do
             # Only add key if it's not already added
             k="$(cat ${kf}|cut -f2 -d' ')"
-            if ! grep -q "${k}" "${user_dir}/.ssh/authorized_keys"; then
+            if ! [[ -e "${user_dir}/.ssh/authorized_keys" ]] || ! grep -q "${k}" "${user_dir}/.ssh/authorized_keys"; then
                 echo "Adding public key to user ${u} ..."
                 cat ${kf} >> "${user_dir}/.ssh/authorized_keys"
             fi;
