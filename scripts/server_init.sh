@@ -5,7 +5,7 @@
 ## add ciges user
 groupadd wheel
 useradd -m ciges -s /bin/bash -G sudo,wheel
-cp -a /home/vagrant/.ssh /home/ciges/
+#cp -a /home/vagrant/.ssh /home/ciges/
 chown -R ciges:ciges /home/ciges
 chmod go-rwx /home/ciges
 
