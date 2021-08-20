@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
       # Configuration files
       cfg.vm.provision "file", source: "etc", destination: "/tmp/etc"
       cfg.vm.provision "shell", name: "Config set", path: "scripts/server_init_config.sh"
-      # Add SSH keys to give access to ciges and root users from host
+      # Add SSH public keys to give access to ciges and root users from host
       cfg.vm.provision "file", source: "ssh_keys", destination: "/tmp/ssh_keys"
       cfg.vm.provision "shell", path: "scripts/server_ssh_keys.sh"
 
@@ -50,6 +50,8 @@ Vagrant.configure("2") do |config|
           cfg_ansible.become = true
           cfg_ansible.become_user = "root"
         end
+        # Add private key for Ansible in root user
+        cfg.vm.provision "shell", name: "Ansible keys set", path: "scripts/copy_ansible_private_key.sh"
       end
 
     end # end config
