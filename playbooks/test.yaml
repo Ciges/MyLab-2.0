@@ -1,0 +1,9 @@
+--- # Test Ansible file
+- name: Test ansible file which shows only a message
+  hosts: all
+  tasks: 
+
+    - name: Test message
+      debug: 
+        msg: "Ansible test playbook OK"
+
