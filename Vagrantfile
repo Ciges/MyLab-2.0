@@ -6,6 +6,7 @@ lab = {
   "dev" => { :ip => "192.168.56.13" },
   "test1" => { :ip => "192.168.56.11" },
   "test2" => { :ip => "192.168.56.12" },
+  "preprod" => { :ip => "192.168.56.14" },
 }
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
@@ -38,6 +39,18 @@ Vagrant.configure("2") do |config|
       # Add SSH keys to give access to ciges and root users from host
       cfg.vm.provision "file", source: "ssh_keys", destination: "/tmp/ssh_keys"
       cfg.vm.provision "shell", path: "scripts/server_ssh_keys.sh"
+
+      # The project's files will be available on each guest server under /vagrant
+      cfg.vm.synced_folder ".", "/vagrant"
+
+      # Specific configuration for Ansible machine
+      if hostname == "ansible"
+        cfg.vm.provision "ansible_local" do |cfg_ansible|
+          cfg_ansible.playbook = "playbooks/test.yaml"
+          cfg_ansible.become = true
+          cfg_ansible.become_user = "root"
+        end
+      end
 
     end # end config
  
