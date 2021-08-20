@@ -8,10 +8,14 @@ for u in ${users}; do
     # Add public ssh keys
     ! [[ -d "${user_dir}/.ssh" ]] && mkdir "${user_dir}/.ssh"
     if [[ -d "/tmp/ssh_keys" ]]; then
-        for kf in /tmp/ssh_keys/*; do
+        for kf in /tmp/ssh_keys/*.pub; do
             # Only add key if it's not already added
             k="$(cat ${kf}|cut -f2 -d' ')"
-            if ! [[ -e "${user_dir}/.ssh/authorized_keys" ]] || ! grep -q "${k}" "${user_dir}/.ssh/authorized_keys"; then
+            if ! [[ -e "${user_dir}/.ssh/authorized_keys" ]]; then
+                touch "${user_dir}/.ssh/authorized_keys"
+                chown ${u}:$(id -gn ${u}) "${user_dir}/.ssh/authorized_keys"
+            fi;
+            if ! grep -q "${k}" "${user_dir}/.ssh/authorized_keys"; then
                 echo "Adding public key to user ${u} ..."
                 cat ${kf} >> "${user_dir}/.ssh/authorized_keys"
             fi;
